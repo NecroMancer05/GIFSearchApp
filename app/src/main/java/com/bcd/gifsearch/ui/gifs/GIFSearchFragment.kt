@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bcd.gifsearch.R
@@ -27,6 +28,7 @@ class GIFSearchFragment : Fragment(R.layout.fragment_gifs), MenuProvider {
     }
 
     private val viewModel: GIFsViewModel by viewModels()
+    private lateinit var binding: FragmentGifsBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,34 +37,46 @@ class GIFSearchFragment : Fragment(R.layout.fragment_gifs), MenuProvider {
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         val searchAdapter = SearchAdapter()
-        val binding = FragmentGifsBinding.bind(view)
+        binding = FragmentGifsBinding.bind(view)
 
         binding.apply {
             recyclerViewGifs.apply {
-                adapter = searchAdapter
+                itemAnimator = null
+                adapter = searchAdapter.withLoadStateHeader(
+                    GIFLoadStateAdapter { searchAdapter.retry() }
+                )
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
             }
 
             viewModel.searchResults.observe(viewLifecycleOwner) { result ->
-
-                searchAdapter.submitList(result.data?.results)
-
-                loadingProgressBar.isVisible = result is NetworkResource.Loading
-                textViewInfo.isVisible =
-                    result is NetworkResource.Error && result.data?.results.isNullOrEmpty()
+                searchAdapter.submitData(viewLifecycleOwner.lifecycle, result)
             }
 
-            recyclerViewGifs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            buttonRetry.setOnClickListener { searchAdapter.retry() }
+        }
 
-                    super.onScrollStateChanged(recyclerView, newState)
+        searchAdapter.addLoadStateListener { loadState ->
+            binding.apply {
+                loadingProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                recyclerViewGifs.isVisible = loadState.source.refresh is LoadState.NotLoading
+                textViewInfo.isVisible = false
 
-                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d(TAG, "RecyclerView End");
+                if (loadState.source.refresh is LoadState.Error) {
+
+                    if (viewModel.searchQuery.value.isBlank()) {
+                        textViewInfo.isVisible = true
+                    } else {
+                        buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                        textViewError.isVisible = loadState.source.refresh is LoadState.Error
                     }
                 }
-            })
+
+                if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && searchAdapter.itemCount < 1) {
+                    recyclerViewGifs.isVisible = false
+                    textViewInfo.isVisible = true
+                }
+            }
         }
     }
 
@@ -77,8 +91,9 @@ class GIFSearchFragment : Fragment(R.layout.fragment_gifs), MenuProvider {
             searchView.setQuery(pendingQuery, false)
         }
 
-        searchView.onQueryTextChanged {
+        searchView.onQueryTextChanged(searchView) {
             viewModel.searchQuery.value = it
+            binding.recyclerViewGifs.scrollToPosition(0)
         }
     }
 

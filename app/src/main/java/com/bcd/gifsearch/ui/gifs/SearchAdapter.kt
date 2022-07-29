@@ -2,27 +2,27 @@ package com.bcd.gifsearch.ui.gifs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bcd.gifsearch.data.Result
 import com.bcd.gifsearch.databinding.GifRowItemBinding
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchAdapter : ListAdapter<Result, SearchAdapter.SearchViewHolder>(SearchComparator()) {
+class SearchAdapter :
+    PagingDataAdapter<Result, SearchAdapter.SearchViewHolder>(SearchComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-
         val binding = GifRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return SearchViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-
         val currentItem = getItem(position)
 
         if (currentItem != null)
@@ -44,6 +44,7 @@ class SearchAdapter : ListAdapter<Result, SearchAdapter.SearchViewHolder>(Search
                 Glide.with(itemView)
                     .load(data.mediaFormats["gif"]?.url)
                     .placeholder(drawable)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageViewGif)
 
                 textViewDescription.text = data.description

@@ -13,15 +13,13 @@ interface GIFApi {
         const val API_KEY = BuildConfig.TENOR_API_KEY
     }
 
-    @GET("categories?key=$API_KEY&client_key=my_test_app")
+    @GET("categories?key=$API_KEY&client_key=gif_search_app")
     suspend fun getCategories(): Categories
 
-    @GET("search?key=$API_KEY&client_key=my_test_app&limit=8&media_filter=gif")
-    suspend fun getSearchResults(@Query("q") search: String): SearchResults
-
-    @GET("search?key=$API_KEY&client_key=my_test_app&limit=8&media_filter=gif")
-    suspend fun getNextSearchResults(
+    @GET("search?key=$API_KEY&client_key=gif_search_app&media_filter=gif")
+    suspend fun getSearchResults(
         @Query("q") search: String,
-        @Query("pos") next: String
+        @Query("pos") next: String = "",
+        @Query("limit") limit: Int = 8
     ): SearchResults
 }
