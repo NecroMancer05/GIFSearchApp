@@ -1,12 +1,15 @@
 package com.bcd.gifsearch.data
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class MediaFormat(
     val url: String,
     val size: Number,
     @SerializedName("dims") val dimensions: Array<Number>
-) {
+) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

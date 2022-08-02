@@ -19,17 +19,17 @@ object AppModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
 
-        val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val client: OkHttpClient = OkHttpClient.Builder().apply {
-            addInterceptor(interceptor)
-        }.build()
+//        val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+//            level = HttpLoggingInterceptor.Level.BODY
+//        }
+//
+//        val client: OkHttpClient = OkHttpClient.Builder().apply {
+//            addInterceptor(interceptor)
+//        }.build()
 
         return Retrofit.Builder()
             .baseUrl(GIFApi.BASE_URL)
-            .client(client)
+//            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

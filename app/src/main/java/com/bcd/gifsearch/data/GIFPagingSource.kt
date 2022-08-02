@@ -9,9 +9,9 @@ import java.io.IOException
 class GIFPagingSource(
     private val gifApi: GIFApi,
     private val query: String
-) : PagingSource<String, Result>() {
+) : PagingSource<String, GIF>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, Result> {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, GIF> {
 
         val currentPage = params.key ?: ""
 
@@ -31,7 +31,7 @@ class GIFPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, Result>): String? = null
+    override fun getRefreshKey(state: PagingState<String, GIF>): String? = null
 
     override val keyReuseSupported: Boolean get() = true
 }

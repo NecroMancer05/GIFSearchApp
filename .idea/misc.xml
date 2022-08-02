@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/fragmen_gif.xml" value="0.5541666666666667" />
+        <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/fragment_gif_details.xml" value="0.5541666666666667" />
+        <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/fragment_gif_info.xml" value="0.5541666666666667" />
         <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/fragment_gifs.xml" value="0.42481884057971014" />
         <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/gif_row_item.xml" value="0.42481884057971014" />
         <entry key="..\:/Projects/GIFSearch/app/src/main/res/layout/gifs_load_state_footer.xml" value="0.34322916666666664" />

@@ -6,15 +6,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bcd.gifsearch.data.Result
+import com.bcd.gifsearch.data.GIF
 import com.bcd.gifsearch.databinding.GifRowItemBinding
+import com.bcd.gifsearch.utilities.DateUtils.formatDate
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import java.text.SimpleDateFormat
-import java.util.*
 
-class SearchAdapter :
-    PagingDataAdapter<Result, SearchAdapter.SearchViewHolder>(SearchComparator()) {
+class SearchAdapter(private val clickListener: OnItemClickListener) :
+    PagingDataAdapter<GIF, SearchAdapter.SearchViewHolder>(SearchComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val binding = GifRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,10 +28,23 @@ class SearchAdapter :
             holder.bind(currentItem)
     }
 
-    class SearchViewHolder(private val binding: GifRowItemBinding) :
+    inner class SearchViewHolder(private val binding: GifRowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: Result) {
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = getItem(position)
+
+                    if (item != null)
+                        clickListener.onItemClick(item)
+                }
+            }
+        }
+
+        fun bind(data: GIF) {
 
             val drawable = CircularProgressDrawable(itemView.context).apply {
                 centerRadius = 64f
@@ -52,21 +64,18 @@ class SearchAdapter :
                 textViewTags.text = data.tags.joinToString(", ")
             }
         }
-
-        private fun formatDate(timeStamp: Float): String {
-
-            val sdf = SimpleDateFormat("dd/MM/YYY HH:mm:ss")
-
-            return sdf.format(Date((timeStamp * 1000).toLong()))
-        }
     }
 
-    class SearchComparator : DiffUtil.ItemCallback<Result>() {
+    class SearchComparator : DiffUtil.ItemCallback<GIF>() {
 
-        override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean =
+        override fun areItemsTheSame(oldItem: GIF, newItem: GIF): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean =
+        override fun areContentsTheSame(oldItem: GIF, newItem: GIF): Boolean =
             oldItem == newItem
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(gif: GIF)
     }
 }

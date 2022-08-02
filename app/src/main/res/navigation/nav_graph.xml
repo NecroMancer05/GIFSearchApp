@@ -8,6 +8,19 @@
     <fragment
         android:id="@+id/GIFsFragment"
         android:name="com.bcd.gifsearch.ui.gifs.GIFSearchFragment"
-        android:label="fragment_gifs"
-        tools:layout="@layout/fragment_gifs" />
+        android:label="Search GIFs"
+        tools:layout="@layout/fragment_gifs">
+        <action
+            android:id="@+id/action_GIFsFragment_to_GIFDetailsFragment"
+            app:destination="@id/GIFDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/GIFDetailsFragment"
+        android:name="com.bcd.gifsearch.ui.gifs.GIFDetailsFragment"
+        android:label="GIF Details"
+        tools:layout="@layout/fragment_gif_details">
+        <argument
+            android:name="gif"
+            app:argType="com.bcd.gifsearch.data.GIF" />
+    </fragment>
 </navigation>
