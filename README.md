@@ -2,6 +2,8 @@
 
 Gif search app powered by Tenor Api, Kotlin Coroutines and Clean Architecture.
 
+Do not forget to set Tenor Api property `tenor_api_key` in `gradle.properties` file.
+
 ## Tech Stack
 * [Kotlin](https://kotlinlang.org/) , [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) , [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
 * [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Dependency Injection
@@ -11,4 +13,4 @@ Gif search app powered by Tenor Api, Kotlin Coroutines and Clean Architecture.
 * [Navigation Component](https://developer.android.com/guide/navigation) - Single activity multiple fragments approach
 * [View Binding](https://developer.android.com/topic/libraries/view-binding) 
 * [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) - Allows to display pages of data from a larger dataset
-* [Glide](https://bumptech.github.io/glide/) Image loading and caching library
+* [Glide](https://bumptech.github.io/glide/) - Image loading and caching library
